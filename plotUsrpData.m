@@ -1,0 +1,30 @@
+clear;
+load("meanUsrpData.mat");
+
+figure;
+plot([10 15 20],meanUsrpData(:,1:3));
+semiPlots;
+f.Position = [4 4 2.5 2];
+xticks([10 15 20]);
+ylim([-125 -75]);
+yticks([-120 -110 -100 -90 -80]);
+xlabel('gNB-RAS Distance (m)');
+ylabel('Interference Power (dBW)');
+leg = legend("No Null","w_{mmn}","w_{heu}",'location','best');
+leg.ItemTokenSize = [10 18];
+leg.FontSize = 7;
+leg.Orientation = 'horizontal';
+
+figure;
+plot([10 15 20],meanUsrpData(:,4:6));
+semiPlots;
+f.Position = [4 4 2.5 2];
+xticks([10 15 20]);
+ylim([0 25]);
+yticks([0 5 10 15 20 25]);
+xlabel('gNB-RAS Distance (m)');
+ylabel('UE SNR (dB)');
+leg = legend("No Null","w_{mmn}","w_{heu}",'location','best');
+leg.ItemTokenSize = [10 18];
+leg.FontSize = 7;
+leg.Orientation = 'horizontal';
