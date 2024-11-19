@@ -62,100 +62,100 @@ for rowidx = 1:3
 			end
 			M = prod(gNBAntSize);
 			for var = 1:N
-% 				gNBSite = txsite("Name","Victor_gNB","Latitude",gNBPos(1),"Longitude",gNBPos(2),"AntennaAngle",...
-% 					gNBAntDir(1:2),"AntennaHeight",32,"TransmitterFrequency",fc);
-% 				
-% 				% Define Raytracing prop model and display plotted rays
-% 				pm = propagationModel("raytracing","Method","sbr","MaxNumReflections",reflectionsOrder);
-% 				RAS_rays = raytrace(gNBSite,RASSite,pm,"Type","pathloss");
-% 	
-% 				% Obtain channel path gains
-% 				ofdmInfo = nrOFDMInfo(NRB,SCS);
-% 				RAS_channel = getChannelObj(RAS_rays,fc,ofdmInfo.SampleRate);
-% 				RAS_channel.SampleRate = ofdmInfo.SampleRate;
-% 				%channel.ChannelFiltering = false;
-% 	
-% 				% Setup antenna array properties
-% 				lambda = c/fc;
-% 				RASArray = phased.NRRectangularPanelArray('Size',[RASAntSize(1:2) 1 1],'Spacing', [0.5*lambda*[1 1] 1 1]);
-% 				RASArray.ElementSet = {phased.IsotropicAntennaElement};   % isotropic antenna element
-% 				RAS_channel.ReceiveAntennaArray = RASArray;
-% 				RAS_channel.ReceiveArrayOrientation = [RASAntDir(1); (-1)*RASAntDir(2); 0]; 
-% 				
-% 				gNBArray = phased.NRRectangularPanelArray('Size',[gNBAntSize(1:2) 1 1],'Spacing', [0.5*lambda*[1 1] 1 1]);
-% 				gNBArray.ElementSet = {phased.IsotropicAntennaElement};
-% 				RAS_channel.TransmitAntennaArray = gNBArray;
-% 				RAS_channel.TransmitArrayOrientation = [gNBAntDir(1); (-1)*gNBAntDir(2); 0];
-% 				
-% 				% Design sample waveform
-% 				RAS_channelInfo = info(RAS_channel);
-% 				T = RAS_channel.SampleRate * 1e-3;
-% 				RAS_Nt = RAS_channelInfo.NumTransmitAntennas;
-% 				RAS_Nr = RAS_channelInfo.NumReceiveAntennas;
-% 				txWaveform = complex(randn(T,RAS_Nt),randn(T,RAS_Nt));
-% 				if mean(isnan(txWaveform),'all')
-% 					nanIdx = isnan(txWaveform);
-% 					txWaveform(nanIdx) = 0;
-% 				end
-% 				[RAS_rxWaveform,RAS_pathGains,RAS_sampleTimes] = RAS_channel(txWaveform);
-% 				noise_RAS = wgn(size(RAS_rxWaveform,1),size(RAS_rxWaveform,2),-137);
-% 	% 			RAS_snr_default(rowidx,i1,i2,var) = snr(RAS_rxWaveform,noise_RAS);
-% 	
-% 				% Get gNB-RAS channel coefficients over all RBs and OFDM symbols
-% 				RAS_pathFilters = getPathFilters(RAS_channel);
-% 				[RAS_offset,~] = nrPerfectTimingEstimate(RAS_pathGains, RAS_pathFilters);
-% 				hest_gR = nrPerfectChannelEstimate(RAS_pathGains, RAS_pathFilters, NRB, SCS, nSlots,...
-% 					RAS_offset, RAS_sampleTimes);
-% 				hest_gR_temp = permute(mean(reshape(hest_gR,[],RAS_Nr,RAS_Nt)),[2,3,1]);
-% 				hest_gR_temp = hest_gR_temp./norm(hest_gR_temp);
-% 	
-% 				% Define UE sites
-% 				% locDisp = abs(randn(K,2).*5e-3);
-% 				% UEPos = locDisp + [ones(K,1).*gNBPos(1) ones(K,1).*gNBPos(2)];
-% 				K = numUEs(i2);
-% 				UENames = "UE"+string(1:K);
-% 				UEPos = zeros(K,2);
-% 				UESites = rxsite("Name",UENames,"Latitude",0,"Longitude",0,"AntennaAngle",UEAntDir(1:2),"AntennaHeight",2);
-% 	
-% 				% Now derive channel for K UEs and the beamforming weights for each UE
-% 				hest_gU_all = zeros(K,RAS_Nt);
-% 				w_gNB_all = zeros(K,RAS_Nt);
-% 				noise_UE = zeros(size(RAS_rxWaveform,1),K);
-% 				UE_channel = nrCDLChannel;
-% 				for i=1:K
-% 					pathToAs = [];
-% 					while(isempty(pathToAs))
-% 						locDisp = abs(randn(1,2).*5e-3);
-% 						UEPos(i,:) = locDisp + gNBPos;
-% 						UESites(i).Latitude = UEPos(i,1);
-% 						UESites(i).Longitude = UEPos(i,2);
-% 						UE_rays = raytrace(gNBSite,UESites(i),pm,"Type","pathloss");
-% 						pathToAs = [UE_rays{1}.PropagationDelay] - min([UE_rays{1}.PropagationDelay]);
-% 					end
-% 					UE_channel = getChannelObj(UE_rays,fc,ofdmInfo.SampleRate);
-% 					UE_channel.SampleRate = ofdmInfo.SampleRate;
-% 					
-% 					UEArray = phased.NRRectangularPanelArray('Size',[UEAntSize(1:2) 1 1],'Spacing',...
-% 						[0.5*lambda*[1 1] 1 1]);
-% 					UEArray.ElementSet = {phased.IsotropicAntennaElement};   % isotropic antenna element
-% 					UE_channel.ReceiveAntennaArray = UEArray;
-% 					UE_channel.ReceiveArrayOrientation = [UEAntDir(1); (-1)*UEAntDir(2); 0];
-% 					UE_channel.TransmitAntennaArray = gNBArray;
-% 					UE_channel.TransmitArrayOrientation = [gNBAntDir(1); (-1)*gNBAntDir(2); 0];
-% 					
-% 					UE_channelInfo = info(UE_channel);
-% 					T = UE_channel.SampleRate * 1e-3;
-% 					UE_Nt = UE_channelInfo.NumTransmitAntennas;
-% 					UE_Nr = UE_channelInfo.NumReceiveAntennas;
-% 					[UE_rxWaveform,UE_pathGains,UE_sampleTimes] = UE_channel(txWaveform);
-% 					UE_pathFilters = getPathFilters(UE_channel);
-% 					[UE_offset,~] = nrPerfectTimingEstimate(UE_pathGains, UE_pathFilters);
-% 					hest_gU = nrPerfectChannelEstimate(UE_pathGains, UE_pathFilters, NRB, SCS, nSlots,...
-% 						UE_offset, UE_sampleTimes);
-% 					hest_gU_all(i,:) = getChannelCoeffs(hest_gU, scOffset, noRBs);
-% 					hest_gU_all(i,:) = hest_gU_all(i,:)./norm(hest_gU_all(i,:));
-%                 	noise_UE(:,i) = wgn(size(UE_rxWaveform,1),size(UE_rxWaveform,2),-89);
-% 				end
+				gNBSite = txsite("Name","Victor_gNB","Latitude",gNBPos(1),"Longitude",gNBPos(2),"AntennaAngle",...
+					gNBAntDir(1:2),"AntennaHeight",32,"TransmitterFrequency",fc);
+				
+				% Define Raytracing prop model and display plotted rays
+				pm = propagationModel("raytracing","Method","sbr","MaxNumReflections",reflectionsOrder);
+				RAS_rays = raytrace(gNBSite,RASSite,pm,"Type","pathloss");
+	
+				% Obtain channel path gains
+				ofdmInfo = nrOFDMInfo(NRB,SCS);
+				RAS_channel = getChannelObj(RAS_rays,fc,ofdmInfo.SampleRate);
+				RAS_channel.SampleRate = ofdmInfo.SampleRate;
+				%channel.ChannelFiltering = false;
+	
+				% Setup antenna array properties
+				lambda = c/fc;
+				RASArray = phased.NRRectangularPanelArray('Size',[RASAntSize(1:2) 1 1],'Spacing', [0.5*lambda*[1 1] 1 1]);
+				RASArray.ElementSet = {phased.IsotropicAntennaElement};   % isotropic antenna element
+				RAS_channel.ReceiveAntennaArray = RASArray;
+				RAS_channel.ReceiveArrayOrientation = [RASAntDir(1); (-1)*RASAntDir(2); 0]; 
+				
+				gNBArray = phased.NRRectangularPanelArray('Size',[gNBAntSize(1:2) 1 1],'Spacing', [0.5*lambda*[1 1] 1 1]);
+				gNBArray.ElementSet = {phased.IsotropicAntennaElement};
+				RAS_channel.TransmitAntennaArray = gNBArray;
+				RAS_channel.TransmitArrayOrientation = [gNBAntDir(1); (-1)*gNBAntDir(2); 0];
+				
+				% Design sample waveform
+				RAS_channelInfo = info(RAS_channel);
+				T = RAS_channel.SampleRate * 1e-3;
+				RAS_Nt = RAS_channelInfo.NumTransmitAntennas;
+				RAS_Nr = RAS_channelInfo.NumReceiveAntennas;
+				txWaveform = complex(randn(T,RAS_Nt),randn(T,RAS_Nt));
+				if mean(isnan(txWaveform),'all')
+					nanIdx = isnan(txWaveform);
+					txWaveform(nanIdx) = 0;
+				end
+				[RAS_rxWaveform,RAS_pathGains,RAS_sampleTimes] = RAS_channel(txWaveform);
+				noise_RAS = wgn(size(RAS_rxWaveform,1),size(RAS_rxWaveform,2),-137);
+	% 			RAS_snr_default(rowidx,i1,i2,var) = snr(RAS_rxWaveform,noise_RAS);
+	
+				% Get gNB-RAS channel coefficients over all RBs and OFDM symbols
+				RAS_pathFilters = getPathFilters(RAS_channel);
+				[RAS_offset,~] = nrPerfectTimingEstimate(RAS_pathGains, RAS_pathFilters);
+				hest_gR = nrPerfectChannelEstimate(RAS_pathGains, RAS_pathFilters, NRB, SCS, nSlots,...
+					RAS_offset, RAS_sampleTimes);
+				hest_gR_temp = permute(mean(reshape(hest_gR,[],RAS_Nr,RAS_Nt)),[2,3,1]);
+				hest_gR_temp = hest_gR_temp./norm(hest_gR_temp);
+	
+				% Define UE sites
+				% locDisp = abs(randn(K,2).*5e-3);
+				% UEPos = locDisp + [ones(K,1).*gNBPos(1) ones(K,1).*gNBPos(2)];
+				K = numUEs(i2);
+				UENames = "UE"+string(1:K);
+				UEPos = zeros(K,2);
+				UESites = rxsite("Name",UENames,"Latitude",0,"Longitude",0,"AntennaAngle",UEAntDir(1:2),"AntennaHeight",2);
+	
+				% Now derive channel for K UEs and the beamforming weights for each UE
+				hest_gU_all = zeros(K,RAS_Nt);
+				w_gNB_all = zeros(K,RAS_Nt);
+				noise_UE = zeros(size(RAS_rxWaveform,1),K);
+				UE_channel = nrCDLChannel;
+				for i=1:K
+					pathToAs = [];
+					while(isempty(pathToAs))
+						locDisp = abs(randn(1,2).*5e-3);
+						UEPos(i,:) = locDisp + gNBPos;
+						UESites(i).Latitude = UEPos(i,1);
+						UESites(i).Longitude = UEPos(i,2);
+						UE_rays = raytrace(gNBSite,UESites(i),pm,"Type","pathloss");
+						pathToAs = [UE_rays{1}.PropagationDelay] - min([UE_rays{1}.PropagationDelay]);
+					end
+					UE_channel = getChannelObj(UE_rays,fc,ofdmInfo.SampleRate);
+					UE_channel.SampleRate = ofdmInfo.SampleRate;
+					
+					UEArray = phased.NRRectangularPanelArray('Size',[UEAntSize(1:2) 1 1],'Spacing',...
+						[0.5*lambda*[1 1] 1 1]);
+					UEArray.ElementSet = {phased.IsotropicAntennaElement};   % isotropic antenna element
+					UE_channel.ReceiveAntennaArray = UEArray;
+					UE_channel.ReceiveArrayOrientation = [UEAntDir(1); (-1)*UEAntDir(2); 0];
+					UE_channel.TransmitAntennaArray = gNBArray;
+					UE_channel.TransmitArrayOrientation = [gNBAntDir(1); (-1)*gNBAntDir(2); 0];
+					
+					UE_channelInfo = info(UE_channel);
+					T = UE_channel.SampleRate * 1e-3;
+					UE_Nt = UE_channelInfo.NumTransmitAntennas;
+					UE_Nr = UE_channelInfo.NumReceiveAntennas;
+					[UE_rxWaveform,UE_pathGains,UE_sampleTimes] = UE_channel(txWaveform);
+					UE_pathFilters = getPathFilters(UE_channel);
+					[UE_offset,~] = nrPerfectTimingEstimate(UE_pathGains, UE_pathFilters);
+					hest_gU = nrPerfectChannelEstimate(UE_pathGains, UE_pathFilters, NRB, SCS, nSlots,...
+						UE_offset, UE_sampleTimes);
+					hest_gU_all(i,:) = getChannelCoeffs(hest_gU, scOffset, noRBs);
+					hest_gU_all(i,:) = hest_gU_all(i,:)./norm(hest_gU_all(i,:));
+                	noise_UE(:,i) = wgn(size(UE_rxWaveform,1),size(UE_rxWaveform,2),-89);
+				end
 				hest_gU_all = randn(K,M,'like',1i);
 				hest_gR_temp = randn(1,M,'like',1i);
 				tic

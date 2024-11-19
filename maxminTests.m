@@ -162,20 +162,20 @@ for i = 1:K
 	UE_wf_bf = (wf*(w_opt./(scale.^0.25)))*hest_gU_all(i,:)';
 	UE_snr_opt(i) = snr(UE_wf_bf,noise_UE(:,i));
 end
-if mean(UE_snr_default(i)) > -1
-	sumrate_default = sum(log2(1+UE_snr_default(i)));
+if mean(UE_snr_default) > -1
+	sumrate_default = sum(log2(1+UE_snr_default));
 else
-	sumrate_default = sum(log2(1+10.^(UE_snr_default(i)./10)));
+	sumrate_default = sum(log2(1+10.^(UE_snr_default./10)));
 end
-if mean(UE_snr_heu(i)) > -1
-	sumrate_heu = sum(log2(1+UE_snr_heu(i)));
+if mean(UE_snr_heu) > -1
+	sumrate_heu = sum(log2(1+UE_snr_heu));
 else
-	sumrate_heu = sum(log2(1+10.^(UE_snr_heu(i)./10)));
+	sumrate_heu = sum(log2(1+10.^(UE_snr_heu./10)));
 end
-if mean(UE_snr_opt(i)) > -1
-	sumrate_opt = sum(log2(1+UE_snr_opt(i)));
+if mean(UE_snr_opt) > -1
+	sumrate_opt = sum(log2(1+UE_snr_opt));
 else
-	sumrate_opt = sum(log2(1+10.^(UE_snr_opt(i)./10)));
+	sumrate_opt = sum(log2(1+10.^(UE_snr_opt./10)));
 end
 RAS_null_default = 10*log10(norm(hest_gR_temp*w_gNB').^2)
 RAS_null_heu = 10*log10(norm(hest_gR_temp*w_copt).^2)
@@ -185,8 +185,8 @@ sumrate_heu
 sumrate_opt
 
 %% Evaluate REM around RAS
-X = -200:1:200;	
-Y = -200:1:200;
+X = -200:10:200;	
+Y = -200:10:200;
 remPow_gNB = zeros(length(X),length(Y));
 remPow_heu = zeros(size(remPow_gNB));
 remPow_opt = zeros(size(remPow_gNB));
@@ -223,44 +223,44 @@ for i=1:length(X)
 		remPow_opt(i,j) = 10*log10(norm(rem_hest*w_opt').^2);
 	end
 end
-
+save('REMTest_2.mat');
 %% Plot REM
 
-% Default beamformer
-figure;
-s = surface(X,Y,remPow_gNB);
-s.EdgeColor = 'none';
-colorbar;
-ylabel('Latitude (m)');
-xlabel('Longitude (m)');
-hold on
-plot(0,0,'or');
-text(0,10,'RAS');
-text(41,-116,'gNB');
-plot(41,-106,'ob');
-
-% Heuristic Solution
-figure;
-s = surface(X,Y,remPow_heu);
-s.EdgeColor = 'none';
-colorbar;
-ylabel('Latitude (m)');
-xlabel('Longitude (m)');
-hold on
-plot(0,0,'or');
-text(0,10,'RAS');
-text(41,-116,'gNB');
-plot(41,-106,'ob');
-
-% Max-min solution
-figure;
-s = surface(X,Y,remPow_opt);
-s.EdgeColor = 'none';
-colorbar;
-ylabel('Latitude (m)');
-xlabel('Longitude (m)');
-hold on
-plot(0,0,'or');
-text(0,10,'RAS');
-text(41,-116,'gNB');
-plot(41,-106,'ob');
+% % Default beamformer
+% figure;
+% s = surface(X,Y,remPow_gNB);
+% s.EdgeColor = 'none';
+% colorbar;
+% ylabel('Latitude (m)');
+% xlabel('Longitude (m)');
+% hold on
+% plot(0,0,'or');
+% text(0,10,'RAS');
+% text(41,-116,'gNB');
+% plot(41,-106,'ob');
+% 
+% % Heuristic Solution
+% figure;
+% s = surface(X,Y,remPow_heu);
+% s.EdgeColor = 'none';
+% colorbar;
+% ylabel('Latitude (m)');
+% xlabel('Longitude (m)');
+% hold on
+% plot(0,0,'or');
+% text(0,10,'RAS');
+% text(41,-116,'gNB');
+% plot(41,-106,'ob');
+% 
+% % Max-min solution
+% figure;
+% s = surface(X,Y,remPow_opt);
+% s.EdgeColor = 'none';
+% colorbar;
+% ylabel('Latitude (m)');
+% xlabel('Longitude (m)');
+% hold on
+% plot(0,0,'or');
+% text(0,10,'RAS');
+% text(41,-116,'gNB');
+% plot(41,-106,'ob');
