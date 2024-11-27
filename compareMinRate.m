@@ -89,8 +89,6 @@ UE_snr_apr = zeros(size(UE_snr_default));
 UE_snr_cf = zeros(size(UE_snr_default));
 UE_snr_opt = zeros(size(UE_snr_default));
 for rowidx=1:length(K)
-	iterationID = sprintf("Iteration %d %d...\n",var, rowidx);
-	disp(iterationID);
 	UENames = "UE"+string(1:K(rowidx));
 	UESites = rxsite("Name",UENames,"Latitude",0,"Longitude",0,"AntennaAngle",UEAntDir(1:2),"AntennaHeight",2);
 	hest_gU_all = zeros(K(rowidx),RAS_Nt);
@@ -299,6 +297,8 @@ for rowidx=1:length(K)
 		sumrate(4,rowidx,var) = sum(log2(1+(10.^(UE_snr_opt(rowidx,:)))./10));
 		minrate(4,rowidx,var) = min(log2(1+(10.^(UE_snr_opt(rowidx,1:K(rowidx))))./10));
 	end
+	iterationID = sprintf("Iteration %d %d...\n",var, rowidx);
+	disp(iterationID);
 end
 end
 null_plot = mean((nullification(:,:,:)),3);
